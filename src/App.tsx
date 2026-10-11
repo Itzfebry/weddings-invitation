@@ -1,49 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { FloatingBackground } from "./components/FloatingBackground";
 import { MusicButton } from "./components/MusicButton";
-import { Navigation } from "./components/Navigation";
 import { OpeningScreen } from "./components/OpeningScreen";
 import { Invitation } from "./pages/Invitation";
-import { SiteBrand } from "./components/SiteBrand";
-import kirbyLogo from "./components/images/kirby.png";
-
-export type InvitationPage = "home" | "story" | "details";
+import { useMusic } from "./hooks/useMusic";
 
 export default function App() {
   const [guestName, setGuestName] = useState<string | null>(null);
   const [isOpening, setIsOpening] = useState(false);
-  const [activePage, setActivePage] = useState<InvitationPage>("home");
-
-  useEffect(() => {
-    document.title = "Weddings F&S";
-    let favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-    if (!favicon) {
-      favicon = document.createElement("link");
-      favicon.rel = "icon";
-      document.head.appendChild(favicon);
-    }
-    favicon.href = kirbyLogo;
-  }, []);
+  const music = useMusic();
 
   const openInvitation = (name: string) => {
+    void music.startMusic();
+    window.scrollTo(0, 0);
     setIsOpening(true);
-    window.setTimeout(() => { setGuestName(name); setActivePage("home"); setIsOpening(false); }, 950);
-  };
-
-  const navigate = (page: InvitationPage) => {
-    setActivePage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.setTimeout(() => { setGuestName(name); setIsOpening(false); }, 950);
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${guestName ? " is-invitation" : ""}`}>
       <FloatingBackground />
-      <SiteBrand />
       <AnimatePresence mode="wait">
-        {guestName ? <Invitation key={activePage} guest={{ name: guestName }} page={activePage} /> : <OpeningScreen key="opening" onOpen={openInvitation} isOpening={isOpening} />}
+        {guestName ? (
+          <Invitation
+            guest={{ name: guestName }}
+          />
+        ) : (
+          <OpeningScreen key="opening" onOpen={openInvitation} isOpening={isOpening} />
+        )}
       </AnimatePresence>
-      {guestName && <><Navigation activePage={activePage} onNavigate={navigate} /><MusicButton /></>}
+      {guestName && <MusicButton isPlaying={music.isPlaying} onToggle={music.toggleMusic} />}
     </div>
   );
 }

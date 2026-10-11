@@ -1,38 +1,45 @@
 import { motion } from "framer-motion";
-import { CalendarDays, Clock3, MapPin, Sparkles } from "lucide-react";
 import maldivesImage from "./images/Maldives.jpg";
 import type { EventDetails as EventDetailsType } from "../types/invitation";
+import { FloralOverlay } from "./FloralOverlay";
 
 interface EventDetailsProps { details: EventDetailsType; }
 
 export const EventDetails = ({ details }: EventDetailsProps) => {
   const cards = [
-    { icon: CalendarDays, label: "TANGGAL", value: details.date },
-    { icon: Clock3, label: "WAKTU", value: details.time },
-    { icon: MapPin, label: "LOKASI", value: details.location },
-    { icon: Sparkles, label: "ALAMAT", value: details.address },
+    { label: "TANGGAL", value: details.date },
+    { label: "WAKTU", value: details.time },
+    { label: "LOKASI", value: details.location },
+    { label: "ALAMAT", value: details.address },
   ];
 
   return (
     <section className="details-section section-shell" id="details">
-      <div className="section-heading">
+      <FloralOverlay variant="details" />
+      <div className="section-heading gsap-scroll-reveal">
         <span className="tiny-label">KAPAN & DI MANA</span>
-        <h2>Simpan tanggal <span>✦</span></h2>
-        <p>Jaga momen kecil ini dekat di hati.</p>
+        <h2>Simpan tanggal</h2>
+        <p>Kami berharap dapat merayakannya bersama Anda.</p>
       </div>
 
       <div className="details-showcase">
-        <div className="details-visual">
-          <img src={maldivesImage} alt="Four Seasons Resort Maldives" />
+        <motion.div
+          className="details-visual"
+          initial={{ scale: 0.985 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <img className="gsap-scroll-visual" src={maldivesImage} alt="Four Seasons Resort Maldives" />
           <div className="details-badge">
-            <span>Ocean Escape</span>
+            <span>Four Seasons Resort</span>
             <strong>Maldives</strong>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="details-grid">
-        {cards.map(({ icon: Icon, label, value }, index) => (
+        {cards.map(({ label, value }, index) => (
           <motion.article
             className="detail-card"
             key={label}
@@ -42,7 +49,6 @@ export const EventDetails = ({ details }: EventDetailsProps) => {
             transition={{ delay: index * 0.08 }}
             whileHover={{ y: -5 }}
           >
-            <div className="detail-icon"><Icon size={19} strokeWidth={1.7} /></div>
             <div>
               <span>{label}</span>
               <strong>{value}</strong>

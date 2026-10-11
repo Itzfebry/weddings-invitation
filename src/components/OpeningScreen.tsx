@@ -1,10 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GuestNameInput } from "./GuestNameInput";
-import { SparkleEffect } from "./SparkleEffect";
-import floralDivider from "./images/floral-divider.svg";
-import envelopeArt from "./images/envelope-ornament.svg";
+import { LilyParallax } from "./LilyParallax";
+import febryImage from "./images/Febry.png";
+import flowerOne from "./images/flower1.png";
+import flowerTwo from "./images/flower2.png";
+import flowerThree from "./images/flower3.png";
+import lilyImage from "./images/lili-pink.png";
+import sashaImage from "./images/Sasha.jpeg";
 
 interface OpeningScreenProps {
   onOpen: (name: string) => void;
@@ -12,156 +15,146 @@ interface OpeningScreenProps {
 }
 
 export const OpeningScreen = ({ onOpen, isOpening }: OpeningScreenProps) => {
-  const introRef = useRef<HTMLDivElement | null>(null);
+  const introRef = useRef<HTMLElement | null>(null);
   const [letterOpened, setLetterOpened] = useState(false);
 
-  const petals = useMemo(
-    () =>
-      Array.from({ length: 18 }, (_, index) => ({
-        id: index,
-        left: `${8 + (index % 6) * 15}%`,
-        top: `${10 + (index % 5) * 18}%`,
-        size: 8 + (index % 4) * 4,
-        delay: index * 0.18,
-        duration: 6 + (index % 5),
-        drift: index % 2 === 0 ? -24 : 24,
-      })),
-    []
-  );
-
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    const root = introRef.current;
+    if (!root) return;
 
-      tl
-        .fromTo(".intro-flower", { opacity: 0, scale: 0.72, y: 22 }, { opacity: 1, scale: 1, y: 0, duration: 1.15 })
-        .fromTo(
-          ".intro-door-left",
-          { opacity: 0, x: -72, rotateY: 65, scaleX: 0.7 },
-          { opacity: 1, x: 0, rotateY: 0, scaleX: 1, duration: 1.5, transformPerspective: 1200, transformOrigin: "right center" },
-          "-=0.6"
-        )
-        .fromTo(
-          ".intro-door-right",
-          { opacity: 0, x: 72, rotateY: -65, scaleX: 0.7 },
-          { opacity: 1, x: 0, rotateY: 0, scaleX: 1, duration: 1.5, transformPerspective: 1200, transformOrigin: "left center" },
-          "-=1.3"
-        )
-        .fromTo(".intro-letter", { opacity: 0, y: 54, rotateX: 68, scale: 0.9 }, { opacity: 1, y: 0, rotateX: 0, scale: 1, duration: 1.15 }, "-=0.65")
-        .fromTo(".intro-caption", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7 }, "-=0.3");
-    }, introRef);
+    const context = gsap.context(() => {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const images = gsap.utils.toArray<HTMLElement>(".intro-photo");
+      const foregroundFlowers = gsap.utils.toArray<HTMLElement>(".opening-floral-foreground img");
+      const openingContent = gsap.utils.toArray<HTMLElement>(".intro-enter");
 
-    return () => ctx.revert();
+      if (reducedMotion) {
+        gsap.set([...images, ...foregroundFlowers, ...openingContent, ".opening-frame"], { autoAlpha: 1, clearProps: "transform" });
+        return;
+      }
+
+      gsap
+        .timeline({ defaults: { ease: "power3.out" } })
+        .fromTo(
+          [".intro-backdrop", ".opening-floral-foreground"],
+          { scale: 1.14 },
+          { scale: 1, duration: 3.4, ease: "power2.out" },
+          0,
+        )
+        .fromTo(images, { autoAlpha: 0, scale: 1.05 }, { autoAlpha: 1, scale: 1, duration: 2.1 }, 0)
+        .fromTo(
+          foregroundFlowers,
+          { autoAlpha: 0, y: 24, filter: "blur(7px)" },
+          { autoAlpha: 0.9, y: 0, filter: "blur(0px)", duration: 1.6, stagger: 0.12, clearProps: "filter" },
+          "-=2.2",
+        )
+        .fromTo(".opening-frame", { autoAlpha: 0, scale: 0.96 }, { autoAlpha: 1, scale: 1, duration: 1.3 }, "-=1.4")
+        .fromTo(
+          ".intro-topline > *, .intro-kicker, .intro-title-line, .opening-trigger, .intro-footer > *",
+          { autoAlpha: 0, y: 22, filter: "blur(8px)" },
+          { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.9, stagger: 0.12, clearProps: "filter" },
+          "-=1.15"
+        );
+    }, root);
+
+    return () => context.revert();
   }, []);
 
   useEffect(() => {
-    if (!letterOpened) return;
+    if (!letterOpened || !introRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.to(".intro-stage", {
-        opacity: 0,
-        y: -18,
-        scale: 0.98,
-        duration: 0.8,
-        pointerEvents: "none",
-        ease: "power2.inOut",
-      });
+    const context = gsap.context(() => {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const duration = reducedMotion ? 0.01 : 0.85;
 
-      gsap.to(".intro-door-left", {
-        x: -72,
-        rotateY: 60,
-        scaleX: 0.78,
-        duration: 1,
-        ease: "power2.inOut",
-      });
-
-      gsap.to(".intro-door-right", {
-        x: 72,
-        rotateY: -60,
-        scaleX: 0.78,
-        duration: 1,
-        ease: "power2.inOut",
-      });
-
-      gsap.fromTo(
-        ".wedding-reveal",
-        { opacity: 0, y: 28, scale: 0.97 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.95, ease: "power3.out", delay: 0.2 }
-      );
-
-      gsap.fromTo(
-        ".guest-form",
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 0.35 }
-      );
+      gsap
+        .timeline({ defaults: { ease: "power3.inOut" } })
+        .to(".intro-copy", { autoAlpha: 0, y: -24, duration: duration * 0.65 })
+        .to(".intro-backdrop", { scale: 1.035, duration }, 0)
+        .fromTo(
+          ".guest-reveal",
+          { autoAlpha: 0, clipPath: "inset(50% 0 50% 0)" },
+          { autoAlpha: 1, clipPath: "inset(0% 0 0% 0)", duration: reducedMotion ? 0.01 : 0.9, ease: "power3.inOut" },
+          "-=0.22"
+        )
+        .fromTo(
+          ".reveal-overline, .reveal-script, .guest-reveal h2, .reveal-copy, .guest-form label, .guest-form input, .guest-form button, .reveal-date",
+          { autoAlpha: 0, y: 18, filter: "blur(6px)" },
+          { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: reducedMotion ? 0.01 : 0.62, stagger: reducedMotion ? 0 : 0.075, clearProps: "filter", ease: "power3.out" },
+          "-=0.32"
+        );
     }, introRef);
 
-    return () => ctx.revert();
+    return () => context.revert();
   }, [letterOpened]);
 
-  const handleOpenLetter = () => {
-    setLetterOpened(true);
-  };
+  useEffect(() => {
+    if (!isOpening || !introRef.current) return;
+    const root = introRef.current;
+
+    const context = gsap.context(() => {
+      const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0.01 : 0.8;
+      gsap.to(root, { autoAlpha: 0, scale: 1.035, duration, ease: "power2.inOut" });
+    }, introRef);
+
+    return () => context.revert();
+  }, [isOpening]);
 
   return (
-    <motion.main className="opening-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.06 }} transition={{ duration: 0.7 }}>
-      <div className="opening-copy" ref={introRef}>
-        <div className="petal-layer" aria-hidden="true">
-          {petals.map((petal) => (
-            <span
-              key={petal.id}
-              className="petal"
-              style={{
-                left: petal.left,
-                top: petal.top,
-                width: `${petal.size}px`,
-                height: `${petal.size * 1.4}px`,
-                animationDelay: `${petal.delay}s`,
-                animationDuration: `${petal.duration}s`,
-                transform: `translate3d(0, 0, 0) rotate(${petal.drift}deg)`,
-              }}
-            />
-          ))}
+    <main className="opening-screen" ref={introRef}>
+      <div className="intro-backdrop" aria-hidden="true">
+        <div className="intro-photo intro-photo--groom">
+          <img src={febryImage} alt="" fetchPriority="high" />
         </div>
-
-        <div className="intro-stage">
-          <div className="intro-floral-ornament intro-floral-left" />
-          <div className="intro-floral-ornament intro-floral-right" />
-
-          <motion.div className="intro-flower" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }}>
-            <img src={floralDivider} alt="Floral divider" />
-          </motion.div>
-
-          <div className="intro-door-frame">
-            <div className="intro-door intro-door-left" />
-            <div className="intro-door intro-door-right" />
-          </div>
-
-          <button type="button" className="intro-letter" onClick={handleOpenLetter} aria-label="Open invitation letter">
-            <img src={envelopeArt} alt="Wedding envelope" />
-          </button>
-
-          <p className="intro-caption">Klik surat untuk membuka undangan</p>
+        <div className="intro-photo intro-photo--bride">
+          <img src={sashaImage} alt="" fetchPriority="high" />
         </div>
-
-        <AnimatePresence>
-          {letterOpened && (
-            <motion.div className="wedding-reveal" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.8 }}>
-              <p className="script-kicker">You are invited</p>
-              <h1>
-                Weddings of
-                <span className="name-highlight">
-                  <em>Febry &amp; Sasha</em>
-                  <span className="name-love" aria-hidden="true">♡</span>
-                </span>
-              </h1>
-              <p className="opening-text">Dengan hati yang tulus, kami menantikan kehadiranmu dalam hari istimewa kami.</p>
-              <GuestNameInput onSubmit={onOpen} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="intro-shade" />
+        <LilyParallax />
       </div>
-      <SparkleEffect active={isOpening} />
-    </motion.main>
+
+      <div className="opening-floral-foreground" aria-hidden="true">
+        <img className="opening-flower opening-flower--one" src={flowerOne} alt="" />
+        <img className="opening-flower opening-flower--two" src={flowerTwo} alt="" />
+        <img className="opening-flower opening-flower--three" src={flowerThree} alt="" />
+      </div>
+
+      <div className="opening-frame">
+        <div className="intro-topline intro-enter">
+          <span className="intro-monogram">F<span>&amp;</span>S</span>
+          <span className="intro-edition">UNDANGAN PERNIKAHAN <i /> 30 MEI 2030</span>
+        </div>
+
+        <div className="intro-copy">
+          <p className="intro-kicker intro-enter"><img src={lilyImage} alt="" aria-hidden="true" /> you are invited to</p>
+          <h1 className="intro-title">
+            <span className="intro-title-line intro-title-line--invitation">the wedding of</span>
+            <span className="intro-title-line">Febry <i>&amp;</i></span>
+            <span className="intro-title-line intro-title-line--last"><em>Sasha</em></span>
+          </h1>
+          <button className="opening-trigger intro-enter" type="button" onClick={() => setLetterOpened(true)}>
+            <span>Get in</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div className="intro-footer intro-enter">
+          <span>FEBRY &amp; SASHA</span>
+          <span>MALDIVES <i /> 30 MEI 2030</span>
+        </div>
+      </div>
+
+      {letterOpened && (
+        <section className="guest-reveal" aria-labelledby="guest-reveal-title">
+          <img className="guest-reveal__flower" src={flowerThree} alt="" aria-hidden="true" />
+          <span className="reveal-overline">SEBUAH HARI ISTIMEWA</span>
+          <p className="script-kicker reveal-script">Dengan bahagia,</p>
+          <h2 id="guest-reveal-title">Untuk siapa undangan ini kami siapkan?</h2>
+          <p className="reveal-copy">Tuliskan nama Anda agar kami dapat menyapa Anda dengan hangat.</p>
+          <GuestNameInput onSubmit={onOpen} />
+          <span className="reveal-date">FEBRY &amp; SASHA <i /> 30 MEI 2030</span>
+        </section>
+      )}
+    </main>
   );
 };

@@ -1,5 +1,3 @@
-export type RSVPStatus = "yes" | "maybe" | "no" | null;
-
 export interface Guest {
   name: string;
 }
