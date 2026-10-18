@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { GuestNameInput } from "./GuestNameInput";
 import { LilyParallax } from "./LilyParallax";
+import { couple, wedding } from "../data/wedding";
 import febryImage from "./images/Febry.png";
 import flowerOne from "./images/flower1.png";
 import flowerTwo from "./images/flower2.png";
@@ -122,15 +123,15 @@ export const OpeningScreen = ({ onOpen, isOpening }: OpeningScreenProps) => {
       <div className="opening-frame">
         <div className="intro-topline intro-enter">
           <span className="intro-monogram">F<span>&amp;</span>S</span>
-          <span className="intro-edition">UNDANGAN PERNIKAHAN <i /> 30 MEI 2030</span>
+          <span className="intro-edition">UNDANGAN PERNIKAHAN <i /> {wedding.dateLabel}</span>
         </div>
 
         <div className="intro-copy">
           <p className="intro-kicker intro-enter"><img src={lilyImage} alt="" aria-hidden="true" /> you are invited to</p>
           <h1 className="intro-title">
             <span className="intro-title-line intro-title-line--invitation">the wedding of</span>
-            <span className="intro-title-line">Febry <i>&amp;</i></span>
-            <span className="intro-title-line intro-title-line--last"><em>Sasha</em></span>
+            <span className="intro-title-line">{couple.groom} <i>&amp;</i></span>
+            <span className="intro-title-line intro-title-line--last"><em>{couple.bride}</em></span>
           </h1>
           <button className="opening-trigger intro-enter" type="button" onClick={() => setLetterOpened(true)}>
             <span>Get in</span>
@@ -139,8 +140,8 @@ export const OpeningScreen = ({ onOpen, isOpening }: OpeningScreenProps) => {
         </div>
 
         <div className="intro-footer intro-enter">
-          <span>FEBRY &amp; SASHA</span>
-          <span>MALDIVES <i /> 30 MEI 2030</span>
+          <span>{couple.displayName.toUpperCase()}</span>
+          <span>{wedding.venue.toUpperCase()} <i /> {wedding.dateLabel}</span>
         </div>
       </div>
 
@@ -152,7 +153,7 @@ export const OpeningScreen = ({ onOpen, isOpening }: OpeningScreenProps) => {
           <h2 id="guest-reveal-title">Untuk siapa undangan ini kami siapkan?</h2>
           <p className="reveal-copy">Tuliskan nama Anda agar kami dapat menyapa Anda dengan hangat.</p>
           <GuestNameInput onSubmit={onOpen} />
-          <span className="reveal-date">FEBRY &amp; SASHA <i /> 30 MEI 2030</span>
+          <span className="reveal-date">{couple.displayName.toUpperCase()} <i /> {wedding.dateLabel}</span>
         </section>
       )}
     </main>

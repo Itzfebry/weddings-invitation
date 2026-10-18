@@ -1,9 +1,12 @@
 import { motion } from "framer-motion";
-import maldivesImage from "./images/Maldives.jpg";
+import { wedding } from "../data/wedding";
 import type { EventDetails as EventDetailsType } from "../types/invitation";
 import { FloralOverlay } from "./FloralOverlay";
+import maldivesImage from "./images/Maldives.jpg";
 
-interface EventDetailsProps { details: EventDetailsType; }
+interface EventDetailsProps {
+  details: EventDetailsType;
+}
 
 export const EventDetails = ({ details }: EventDetailsProps) => {
   const cards = [
@@ -33,7 +36,7 @@ export const EventDetails = ({ details }: EventDetailsProps) => {
           <img className="gsap-scroll-visual" src={maldivesImage} alt="Four Seasons Resort Maldives" />
           <div className="details-badge">
             <span>Four Seasons Resort</span>
-            <strong>Maldives</strong>
+            <strong>{wedding.venue}</strong>
           </div>
         </motion.div>
       </div>

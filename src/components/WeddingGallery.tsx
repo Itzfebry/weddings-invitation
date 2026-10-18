@@ -3,6 +3,7 @@ import "react-image-gallery/styles/image-gallery.css";
 import { WeddingMotifs } from "./WeddingMotifs";
 import portraitOne from "./images/potret1.png";
 import portraitTwo from "./images/potret2.png";
+import { couple } from "../data/wedding";
 
 const images: GalleryItem[] = [
   {
@@ -25,7 +26,7 @@ export const WeddingGallery = () => (
   <section className="wedding-gallery-section section-shell" aria-labelledby="wedding-gallery-title">
     <WeddingMotifs variant="gallery" />
     <header className="gallery-heading gsap-scroll-reveal">
-      <span className="tiny-label">ALBUM FEBRY &amp; SASHA</span>
+      <span className="tiny-label">ALBUM {couple.displayName.toUpperCase()}</span>
       <h2 id="wedding-gallery-title">Potret perjalanan kami</h2>
       <p>Dua potret, banyak cerita</p>
     </header>

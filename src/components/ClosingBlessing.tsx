@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { Guest } from "../types/invitation";
 import flowerThree from "./images/flower3.png";
+import { couple, wedding } from "../data/wedding";
 
 interface ClosingBlessingProps {
   guest: Guest;
@@ -29,8 +30,8 @@ export const ClosingBlessing = ({ guest }: ClosingBlessingProps) => (
         tangga yang kami bangun tumbuh dalam kelembutan, ketulusan, serta saling menguatkan.
       </p>
       <p className="closing-signoff">Sampai bertemu di hari bahagia</p>
-      <p className="closing-couple">Febry <span>&amp;</span> Sasha</p>
-      <span className="closing-date">30 MEI 2030 <i /> MALDIVES</span>
+      <p className="closing-couple">{couple.groom} <span>&amp;</span> {couple.bride}</p>
+      <span className="closing-date">{wedding.dateLabel} <i /> {wedding.venue.toUpperCase()}</span>
     </motion.article>
     <footer className="site-footer">© 2026 Mochammad Ginata Febryansyah</footer>
   </section>

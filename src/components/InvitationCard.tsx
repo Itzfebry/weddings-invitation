@@ -7,6 +7,7 @@ import flowerOne from "./images/flower1.png";
 import flowerTwo from "./images/flower2.png";
 import flowerThree from "./images/flower3.png";
 import sashaImage from "./images/Sasha.jpeg";
+import { couple, wedding } from "../data/wedding";
 
 interface InvitationCardProps {
   guest: Guest;
@@ -94,14 +95,14 @@ export const InvitationCard = ({ guest, onViewDetails }: InvitationCardProps) =>
 
       <div className="home-composition">
         <div className="hero-copy">
-          <span className="hero-eyebrow hero-reveal">UNDANGAN PERNIKAHAN <i /> 30 MEI 2030</span>
+          <span className="hero-eyebrow hero-reveal">UNDANGAN PERNIKAHAN <i /> {wedding.dateLabel}</span>
           <p className="hero-greeting hero-reveal">Untuk {guest.name},</p>
-          <h1 className="hero-reveal">Febry <span>&amp;</span> Sasha</h1>
+          <h1 className="hero-reveal">{couple.groom} <span>&amp;</span> {couple.bride}</h1>
           <p className="hero-message hero-reveal">With hearts full of joy, we invite you to celebrate the beginning of our forever.</p>
           <div className="hero-event-line hero-reveal">
-            <span>30 Mei 2030</span>
+            <span>{wedding.dateLabel}</span>
             <i />
-            <span>Four Seasons Resort, Maldives</span>
+            <span>{wedding.venueName}</span>
           </div>
           <div className="hero-actions hero-reveal">
             <motion.button
@@ -127,7 +128,7 @@ export const InvitationCard = ({ guest, onViewDetails }: InvitationCardProps) =>
             <img src={sashaImage} alt="Sasha" />
             <figcaption><strong>Sasha</strong><span>MEMPELAI WANITA</span></figcaption>
           </figure>
-          <span className="portrait-caption hero-reveal">FEBRY &amp; SASHA <i /> MALDIVES</span>
+          <span className="portrait-caption hero-reveal">{couple.displayName.toUpperCase()} <i /> {wedding.venue.toUpperCase()}</span>
         </div>
       </div>
       <motion.span

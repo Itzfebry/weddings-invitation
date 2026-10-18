@@ -9,22 +9,12 @@ import { HeroScene } from "../components/HeroScene";
 import { InvitationCard } from "../components/InvitationCard";
 import { Story } from "../components/Story";
 import { WeddingGallery } from "../components/WeddingGallery";
-import type {
-  EventDetails as EventDetailsType,
-  Guest,
-} from "../types/invitation";
+import { eventDetails, wedding } from "../data/wedding";
+import type { Guest } from "../types/invitation";
 
 interface InvitationProps {
   guest: Guest;
 }
-
-const details: EventDetailsType = {
-  date: "Kamis, 30 Mei 2030",
-  time: "08.00 WIB - Selesai",
-  location: "Maldives",
-  address: "Four Seasons Resort Maldives",
-};
-const eventDate = new Date("2030-05-30T08:00:00+07:00").getTime();
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,8 +97,8 @@ export const Invitation = ({ guest }: InvitationProps) => {
         <InvitationCard guest={guest} onViewDetails={scrollToDetails} />
         <Story />
         <WeddingGallery />
-        <Countdown targetDate={eventDate} />
-        <EventDetails details={details} />
+        <Countdown targetDate={wedding.countdownTarget} />
+        <EventDetails details={eventDetails} />
         <ClosingBlessing guest={guest} />
       </div>
     </motion.main>
